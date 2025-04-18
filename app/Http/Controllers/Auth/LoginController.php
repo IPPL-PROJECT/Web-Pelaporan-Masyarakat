@@ -33,6 +33,8 @@ class LoginController extends Controller
                }
             }
 
+            return redirect()->route('home');
+
             return redirect()-> route('login')->withErrors([
                 'email' => 'Email atau password salah',
 

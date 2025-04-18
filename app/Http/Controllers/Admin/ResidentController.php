@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreResidentRequest;
 use App\Http\Requests\UpdateResidentRequest;
 use App\Interfaces\ResidentRepositoryInterface;
+use RealRashid\SweetAlert\Facades\Alert as Swal;
 
 class ResidentController extends Controller
 {
@@ -43,6 +44,8 @@ class ResidentController extends Controller
 
         $this->residentRepository->createResident($data);
 
+        Swal::toast('success', 'Data Masyarakat Berhasil Ditambahkan')->timerProgressBar();
+
         return redirect()->route('admin.resident.index');
     }
 
@@ -78,6 +81,8 @@ class ResidentController extends Controller
 
         $this->residentRepository->updateResident($id, $data);
 
+         Swal::toast( 'Data Masyarakat Berhasil Diupdate', 'success')->timerProgressBar();
+
         return redirect()->route('admin.resident.index');
 
     }
@@ -88,6 +93,8 @@ class ResidentController extends Controller
     public function destroy(string $id)
     {
         $this->residentRepository->deteleResident($id);
+
+        Swal::toast( 'Data Masyarakat Berhasil Dihapus', 'success')->timerProgressBar();
 
          return redirect()->route('admin.resident.index');
     }

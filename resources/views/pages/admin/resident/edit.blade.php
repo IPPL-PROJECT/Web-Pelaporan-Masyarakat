@@ -14,7 +14,7 @@
                         <div class="card-body">
                             <form action="{{route('admin.resident.update', $resident->id)}}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                @method('PUT') 
+                                @method('PUT')
                                 <div class="form-group">
                                     <label for="name">Nama</label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{old('name')}}">
