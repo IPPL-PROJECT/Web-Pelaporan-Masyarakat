@@ -13,8 +13,8 @@
         <div class="col-6">
             <div class="card profile-stats">
                 <div class="card-body">
-                    <h5 class="card-title">2</h5>
-                    <p class="card-text">Laporan Aktif</p>
+                    <h5 class="card-title">{{\App\Models\Report::count()}}</h5>
+                    <p class="card-text">Total Laporan</p>
                 </div>
             </div>
         </div>

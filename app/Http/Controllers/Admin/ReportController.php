@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReportRequest;
 use App\Http\Requests\UpdateReportRequest;
 use App\Interfaces\ReportRepositoryInterface;
 use App\Interfaces\ResidentRepositoryInterface;
-use App\Interfaces\ReportCategoryRepositoryInterface;
 use RealRashid\SweetAlert\Facades\Alert as Swal;
+use App\Interfaces\ReportCategoryRepositoryInterface;
 
 class ReportController extends Controller
 {
@@ -33,12 +34,28 @@ class ReportController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $reports = $this->reportRepository->getAllReports();
+    public function index(Request $request)
+{
+    // Ambil semua kategori laporan
+    $categories = \App\Models\ReportCategory::all();
 
-        return view('pages.admin.report.index', compact('reports'));
-    }
+    // Filter laporan berdasarkan kategori dan rentang tanggal
+    $reports = \App\Models\Report::with(['resident.user', 'reportCategory', 'reportStatuses'])
+        ->when($request->category, fn($query) =>
+            $query->whereHas('reportCategory', fn($q) => $q->where('name', $request->category))
+        )
+        ->when($request->start_date && $request->end_date, fn($query) =>
+            $query->whereBetween('created_at', [
+                Carbon::parse($request->start_date)->startOfDay(),
+                Carbon::parse($request->end_date)->endOfDay()
+            ])
+        )
+        ->latest()
+        ->get();
+
+    // Mengirimkan laporan dan kategori ke view
+    return view('pages.admin.report.index', compact('reports', 'categories'));
+}
 
     /**
      * Show the form for creating a new resource.
